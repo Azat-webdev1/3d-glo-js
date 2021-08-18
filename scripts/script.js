@@ -1,27 +1,28 @@
 'use strict';
 
 window.addEventListener('DOMContentLoaded', () => {
+  
   const countTimer = (dedline) => {
+    let idInterval = 0;
     let timerHours = document.querySelector('#timer-hours'),
       timerMinutes = document.querySelector('#timer-minutes'),
       timerSeconds = document.querySelector('#timer-seconds');
     
-    let idInterval = 0;
-    
     const getTimeRemaining = () => {
+      
       let dateStop = new Date(dedline).getTime(),
         dateNow = new Date().getTime(),
         timeRemaining = (dateStop - dateNow) / 1000;
-      
+        
       let seconds = 0,
         minutes = 0,
         hours = 0;
       
       if (timeRemaining > 0) {
-          seconds = Math.floor(timeRemaining % 60);
-          minutes = Math.floor((timeRemaining / 60) % 60);
-          hours = Math.floor(timeRemaining / 60 / 60);
-        }
+        seconds = Math.floor(timeRemaining % 60);
+        minutes = Math.floor((timeRemaining / 60) % 60);
+        hours = Math.floor(timeRemaining / 60 / 60);
+      }
       
       return {
         timeRemaining,
@@ -38,7 +39,7 @@ window.addEventListener('DOMContentLoaded', () => {
         return String(elem);
       }
     };
-
+    
     const updateClock = () => {
       let timer = getTimeRemaining();
 
@@ -46,12 +47,13 @@ window.addEventListener('DOMContentLoaded', () => {
       timerMinutes.textContent = addZero(timer.minutes);
       timerSeconds.textContent = addZero(timer.seconds);
 
-      if (timer.timeRemaining < 0) {
+      if (timer.timeRemaining <= 0) {
         clearInterval(idInterval);
-      } 
+      }
     };
+    updateClock();
     idInterval = setInterval(updateClock, 1000);
   };
-
-  countTimer('19 Aug 2021');
+  
+  countTimer('20 Aug 2021');
 });
