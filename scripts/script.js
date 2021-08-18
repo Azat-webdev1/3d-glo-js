@@ -31,12 +31,20 @@ window.addEventListener('DOMContentLoaded', () => {
       };
     };
 
+    const addZero = (elem) => {
+      if (String(elem).length === 1) {
+        return '0' + elem;
+      } else {
+        return String(elem);
+      }
+    };
+
     const updateClock = () => {
       let timer = getTimeRemaining();
 
-      timerHours.textContent = timer.hours;
-      timerMinutes.textContent = timer.minutes;
-      timerSeconds.textContent = timer.seconds;
+      timerHours.textContent = addZero(timer.hours);
+      timerMinutes.textContent = addZero(timer.minutes);
+      timerSeconds.textContent = addZero(timer.seconds);
 
       if (timer.timeRemaining < 0) {
         clearInterval(idInterval);
