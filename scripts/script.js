@@ -89,9 +89,29 @@ window.addEventListener('DOMContentLoaded', () => {
         endPos: 0
       };
     
+    const popupShow = () => {
+
+      if (popupData.startPos > popupData.endPos) {
+        popupData.count -= popupData.speed;
+      } else {
+        popupData.count += popupData.speed;
+        popupContent.style.transform = `translateY(${popupData.count}px)`;
+      }
+    
+      if (popupData.startPos > popupData.endPos
+        && popupData.count > popupData.endPos
+        || popupData.count < popupData.endPos) {
+        requestAnimationFrame(popupShow);
+      }
+    };
+    
     popupBtn.forEach((elem) => {
       elem.addEventListener('click', () => {
         popup.style.display = 'block';
+        if (screen.width > 768) {
+          popupData.count = popupData.startPos;
+          requestAnimationFrame(popupShow);
+        }
       });
     });
     
