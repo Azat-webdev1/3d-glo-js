@@ -1,7 +1,7 @@
 'use strict';
 
 window.addEventListener('DOMContentLoaded', () => {
-  
+  // Таймер
   const countTimer = (dedline) => {
     let idInterval = 0;
     let timerHours = document.querySelector('#timer-hours'),
@@ -56,4 +56,49 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   
   countTimer('20 Aug 2021');
+
+  // Меню
+  const toggleMenu = () => {
+    const btnMenu = document.querySelector('.menu'),
+      menu = document.querySelector('menu'),
+      closeBtn = document.querySelector('.close-btn'),
+      menuItems = menu.querySelectorAll('ul>li');
+    
+    const handlerMenu = () => {
+      menu.classList.toggle('active-menu');
+    };
+    
+    btnMenu.addEventListener('click', handlerMenu);
+    closeBtn.addEventListener('click', handlerMenu);
+
+    menuItems.forEach((elem) => elem.addEventListener('click', handlerMenu));
+  };
+  
+  toggleMenu();
+
+  //Модальное окно
+  const togglePopUp = () => {
+    const popup = document.querySelector('.popup'),
+      popupBtn = document.querySelectorAll('.popup-btn'),
+      popupClose = document.querySelector('.popup-close'),
+      popupContent = document.querySelector('.popup-content'),
+      popupData = {
+        count: -445,
+        speed: 15,
+        startPos: -445,
+        endPos: 0
+      };
+    
+    popupBtn.forEach((elem) => {
+      elem.addEventListener('click', () => {
+        popup.style.display = 'block';
+      });
+    });
+    
+    popupClose.addEventListener('click', () => {
+      popup.style.display = 'none';
+    });
+  };
+  togglePopUp();
+  
 });
