@@ -60,37 +60,40 @@ window.addEventListener('DOMContentLoaded', () => {
   // Меню
   const toggleMenu = () => {
     const btnMenu = document.querySelector('.menu'),
-      menu = document.querySelector('menu'),
-      closeBtn = document.querySelector('.close-btn'),
-      menuItems = menu.querySelectorAll('ul>li');
-
-    const handlerMenu = () => {
-      menu.classList.add('active-menu');
-      menu.style.display = 'flex';
+      menu = document.querySelector('menu');
+      
+    const handlerMenu = (e) => {
+      const target = e.target;
+    
+      if (target.closest('.menu')) {
+        menu.classList.toggle('active-menu');
+      } else if (target !== menu && target.closest('[href^="#"]')) {
+        
+        menu.classList.toggle('active-menu');
+      }
+      if (!target.classList.contains('close-btn')) {
+        menu.style.display = 'flex';
+      }
     };
-
+    
     btnMenu.addEventListener('click', handlerMenu);
-    closeBtn.addEventListener('click', () => {
-      menu.classList.toggle('active-menu');
-      menu.style.display = 'none';
-    });
-
+    menu.addEventListener('click', handlerMenu);
+    
+    /*
     window.addEventListener('click', (e) => {
       if (!menu.contains(e.target) && !btnMenu.contains(e.target)) {
         menu.style.display = 'none';
       }
     });
-
-    menuItems.forEach((elem) => elem.addEventListener('click', handlerMenu));
+    */
   };
-
+  
   toggleMenu();
 
   //Модальное окно
   const togglePopup = () => {
     const popup = document.querySelector('.popup'),
       popupBtn = document.querySelectorAll('.popup-btn'),
-      popupClose = document.querySelector('.popup-close'),
       popupContent = document.querySelector('.popup-content'),
       popupData = {
         count: -445,
@@ -124,7 +127,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
-    
+
     popup.addEventListener('click', event => {
       let target = event.target;
 
@@ -139,7 +142,7 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
   };
-  
+
   togglePopup();
 
   //Табы
