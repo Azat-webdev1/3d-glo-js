@@ -182,13 +182,18 @@ window.addEventListener('DOMContentLoaded', () => {
   //Слайдер
   const slider = () => {
     const slide = document.querySelectorAll('.portfolio-item'),
-      dotsParent = document.querySelectorAll('.portfolio-dots'),
-      dot = document.querySelectorAll('.dot'),
+      dots = document.querySelector('.portfolio-dots'),
       slider = document.querySelector('.portfolio-content');
-
+      
+    for (let i = 0; i < slide.length; i++) {
+      dots.insertAdjacentHTML('beforeend', 
+      `<li class="dot ${i === 0 ? 'dot-active' : ''}"></li>`);
+    }
+    
+    const dot = document.querySelectorAll('.dot');
+    
     let currentSlide = 0;
     let interval;
-
     const prevSlide = (elem, index, strClass) => {
       elem[index].classList.remove(strClass);
     };
@@ -196,7 +201,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const nextSlide = (elem, index, strClass) => {
       elem[index].classList.add(strClass);
     };
-
+  
     const autoPlaySlide = () => {
 
       prevSlide(slide, currentSlide, 'portfolio-item-active');
@@ -217,6 +222,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const stopSlide = () => {
       clearInterval(interval);
     };
+    
     slider.addEventListener('click', (e) => {
       e.preventDefault();
       let target = e.target;
@@ -238,6 +244,7 @@ window.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
+      
       if (currentSlide >= slide.length) {
         currentSlide = 0;
       }
