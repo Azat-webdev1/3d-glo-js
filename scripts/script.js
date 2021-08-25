@@ -54,7 +54,6 @@ window.addEventListener('DOMContentLoaded', () => {
     updateClock();
     idInterval = setInterval(updateClock, 1000);
   };
-
   countTimer('20 Aug 2021');
 
   // Меню
@@ -80,7 +79,6 @@ window.addEventListener('DOMContentLoaded', () => {
     menu.addEventListener('click', handlerMenu);
 
   };
-
   toggleMenu();
 
   //Модальное окно
@@ -135,7 +133,6 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
   };
-
   togglePopup();
 
   //Табы
@@ -169,7 +166,6 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
   };
-
   tabs();
 
   //Слайдер
@@ -260,11 +256,9 @@ window.addEventListener('DOMContentLoaded', () => {
         startSlide();
       }
     });
-
-    startSlide();
+  startSlide();
 
   };
-
   slider();
 
   //переключение фотографий "Наша команда"
@@ -289,7 +283,33 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   
   };
-  
   toggleImageCommand();
+
+  // Запрет ввода букв в "Рассчитать стоимость"
+  const inputValid = () => {
+    const calc = document.querySelector('#calc');
+
+
+    const inputCalc = () => {
+
+      const pattern = /[^\+\d]/g;
+      const allowedCodes = [8, 9, 27, 35, 36, 37, 38, 39, 46, 110, 188];
+      
+      calc.addEventListener('input', (e) => {
+  
+        let target = e.target;
+        
+        if ((target.value.match(pattern) ||
+          allowedCodes.some(code => code === e.keyCode))) {
+            target.value = target.value.slice(0, -1);
+        }
+        
+      });
+
+    };
+    inputCalc();
+  
+  };
+  inputValid();
 
 });
