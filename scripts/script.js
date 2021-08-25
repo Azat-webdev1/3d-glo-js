@@ -175,8 +175,8 @@ window.addEventListener('DOMContentLoaded', () => {
       slider = document.querySelector('.portfolio-content');
       
     for (let i = 0; i < slide.length; i++) {
-      dots.insertAdjacentHTML('beforeend', 
-      `<li class="dot ${i === 0 ? 'dot-active' : ''}"></li>`);
+      dots.insertAdjacentHTML('beforeend',
+        `<li class="dot ${i === 0 ? 'dot-active' : ''}"></li>`);
     }
     
     const dot = document.querySelectorAll('.dot');
@@ -256,7 +256,7 @@ window.addEventListener('DOMContentLoaded', () => {
         startSlide();
       }
     });
-  startSlide();
+    startSlide();
 
   };
   slider();
@@ -275,7 +275,7 @@ window.addEventListener('DOMContentLoaded', () => {
         target.src = target.getAttribute('data-img');
       });
 
-      el.addEventListener('mouseout', (e) => { 
+      el.addEventListener('mouseout', (e) => {
         let target = e.target;
         target.src = url;
       });
@@ -285,31 +285,66 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   toggleImageCommand();
 
-  // Запрет ввода букв в "Рассчитать стоимость"
+  // Запрет ввода букв 
   const inputValid = () => {
-    const calc = document.querySelector('#calc');
-
-
+    const calc = document.querySelector('#calc'),
+      inputTexts = document.querySelectorAll('input[placeholder="Ваше имя"], input[placeholder="Ваше сообщение"]'),
+      emailInput = document.querySelectorAll('input[placeholder="E-mail"]'),
+      phoneInput = document.querySelectorAll('input[placeholder="Номер телефона"]');
+    
     const inputCalc = () => {
 
-      const pattern = /[^\+\d]/g;
+      const pattern = /[^\d]/g;
       const allowedCodes = [8, 9, 27, 35, 36, 37, 38, 39, 46, 110, 188];
       
       calc.addEventListener('input', (e) => {
-  
         let target = e.target;
         
         if ((target.value.match(pattern) ||
           allowedCodes.some(code => code === e.keyCode))) {
-            target.value = target.value.slice(0, -1);
+          target.value = target.value.slice(0, -1);
         }
-        
+      
+      });
+      
+    };
+    inputCalc();
+
+    const inputNameText = () => {
+      
+      inputTexts.forEach(elem => {
+        elem.addEventListener('input', e => {
+          e.target.value = e.target.value.replace(/[^А-Яа-яёЁ -]/g, '');
+        });
+      });
+      
+    };
+    inputNameText();
+
+    const inputEmail = () => {
+
+      emailInput.forEach(elem => {
+        elem.addEventListener('input', e => {
+          e.target.value = e.target.value.replace(/[^a-z @ \- ! _ . ~ * '']/gi, '');
+        });
       });
 
     };
-    inputCalc();
-  
+    inputEmail();
+
+    const inputPhone = () => {
+      
+      phoneInput.forEach(elem => {
+        elem.addEventListener('input', e => {
+          e.target.value = e.target.value.replace(/[^0-9 \- ()]/gi, '');
+        });
+      });
+    
+    };
+    inputPhone();
+
   };
   inputValid();
 
 });
+
