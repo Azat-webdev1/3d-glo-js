@@ -79,13 +79,6 @@ window.addEventListener('DOMContentLoaded', () => {
     btnMenu.addEventListener('click', handlerMenu);
     menu.addEventListener('click', handlerMenu);
 
-    /*
-    window.addEventListener('click', (e) => {
-      if (!menu.contains(e.target) && !btnMenu.contains(e.target)) {
-        menu.style.display = 'none';
-      }
-    });
-    */
   };
 
   toggleMenu();
@@ -268,10 +261,35 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    startSlide(1000);
+    startSlide();
 
   };
 
   slider();
+
+  //переключение фотографий "Наша команда"
+  const toggleImageCommand = () => {
+    const command = document.querySelectorAll('#command .row img');
+
+    let url;
+
+    command.forEach(el => {
+
+      el.addEventListener('mouseenter', (e) => {
+        let target = e.target;
+        url = e.target.src;
+        target.src = target.getAttribute('data-img');
+      });
+
+      el.addEventListener('mouseout', (e) => { 
+        let target = e.target;
+        target.src = url;
+      });
+    
+    });
+  
+  };
+  
+  toggleImageCommand();
 
 });
