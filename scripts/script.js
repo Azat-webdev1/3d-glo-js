@@ -173,14 +173,14 @@ window.addEventListener('DOMContentLoaded', () => {
     const slide = document.querySelectorAll('.portfolio-item'),
       dots = document.querySelector('.portfolio-dots'),
       slider = document.querySelector('.portfolio-content');
-      
+
     for (let i = 0; i < slide.length; i++) {
       dots.insertAdjacentHTML('beforeend',
         `<li class="dot ${i === 0 ? 'dot-active' : ''}"></li>`);
     }
-    
+
     const dot = document.querySelectorAll('.dot');
-    
+
     let currentSlide = 0;
     let interval;
     const prevSlide = (elem, index, strClass) => {
@@ -190,7 +190,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const nextSlide = (elem, index, strClass) => {
       elem[index].classList.add(strClass);
     };
-  
+
     const autoPlaySlide = () => {
 
       prevSlide(slide, currentSlide, 'portfolio-item-active');
@@ -211,7 +211,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const stopSlide = () => {
       clearInterval(interval);
     };
-    
+
     slider.addEventListener('click', (e) => {
       e.preventDefault();
       let target = e.target;
@@ -233,7 +233,7 @@ window.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
-      
+
       if (currentSlide >= slide.length) {
         currentSlide = 0;
       }
@@ -279,51 +279,52 @@ window.addEventListener('DOMContentLoaded', () => {
         let target = e.target;
         target.src = url;
       });
-    
+
     });
-  
+
   };
   toggleImageCommand();
 
-  // Запрет ввода букв 
+  // проверка инпутов
   const inputValid = () => {
     const calc = document.querySelector('#calc'),
       inputTexts = document.querySelectorAll('input[placeholder="Ваше имя"], input[placeholder="Ваше сообщение"]'),
-      emailInput = document.querySelectorAll('input[placeholder="E-mail"]'),
-      phoneInput = document.querySelectorAll('input[placeholder="Номер телефона"]');
-    
+      emailInputs = document.querySelectorAll('input[placeholder="E-mail"]'),
+      phoneInputs = document.querySelectorAll('input[placeholder="Номер телефона"]'),
+      inputAll = document.querySelectorAll('input');
+
     const inputCalc = () => {
 
       const pattern = /[^\d]/g;
       const allowedCodes = [8, 9, 27, 35, 36, 37, 38, 39, 46, 110, 188];
-      
+
       calc.addEventListener('input', (e) => {
         let target = e.target;
-        
+
         if ((target.value.match(pattern) ||
-          allowedCodes.some(code => code === e.keyCode))) {
+            allowedCodes.some(code => code === e.keyCode))) {
           target.value = target.value.slice(0, -1);
         }
-      
+
       });
-      
+
     };
     inputCalc();
 
     const inputNameText = () => {
-      
+
       inputTexts.forEach(elem => {
         elem.addEventListener('input', e => {
-          e.target.value = e.target.value.replace(/[^А-Яа-яёЁ -]/g, '');
+          e.target.value = e.target.value.replace(/[^А-Яа-яёЁ -]/gi, '');
         });
       });
-      
+
     };
     inputNameText();
 
     const inputEmail = () => {
 
-      emailInput.forEach(elem => {
+      emailInputs.forEach(elem => {
         elem.addEventListener('input', e => {
           e.target.value = e.target.value.replace(/[^a-z @ \- ! _ . ~ * '']/gi, '');
         });
@@ -333,18 +334,41 @@ window.addEventListener('DOMContentLoaded', () => {
     inputEmail();
 
     const inputPhone = () => {
-      
-      phoneInput.forEach(elem => {
+
+      phoneInputs.forEach(elem => {
         elem.addEventListener('input', e => {
           e.target.value = e.target.value.replace(/[^0-9 \- ()]/gi, '');
         });
       });
-    
+
     };
     inputPhone();
+
+    const checkInputAll = (elem) => {
+      elem.value = elem.value.trim();
+      elem.value = elem.value.replace(/-+/g, '-');
+      elem.value = elem.value.replace(/ +/g, ' ');
+      elem.value = elem.value.replace(/^-/, '');
+      elem.value = elem.value.replace(/-$/, '');
+      if (elem.closest('input[placeholder="Ваше имя"]')) {
+        let text = elem.value;
+        text = text[0].toUpperCase() + text.substring(1);
+        elem.value = text;
+      }
+    };
+    
+    inputAll.forEach((elem) => {
+      elem.addEventListener('blur', e => {
+        
+        if (e.target.closest('input')) {
+          checkInputAll(e.target);
+        }
+
+      }, true);
+    });
+    
 
   };
   inputValid();
 
 });
-
