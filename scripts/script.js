@@ -152,7 +152,8 @@ window.addEventListener('DOMContentLoaded', () => {
         }
       }
     };
-
+    toggleTabContent(0);
+    
     tabHeader.addEventListener('click', (e) => {
       let target = e.target;
 
