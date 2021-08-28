@@ -293,17 +293,17 @@ window.addEventListener('DOMContentLoaded', () => {
       emailInputs = document.querySelectorAll('input[placeholder="E-mail"]'),
       phoneInputs = document.querySelectorAll('input[placeholder="Номер телефона"]'),
       inputAll = document.querySelectorAll('input');
-    
-      
-      const inputCalc = () => {
-        calc.addEventListener('input', (e) => {
-          e.target.value = e.target.value.replace(/[^0-9 \.]/g, "");
-          
-        });
-      };
-      inputCalc();
-    
-    
+
+
+    const inputCalc = () => {
+      calc.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/[^0-9 \.]/g, '');
+
+      });
+    };
+    inputCalc();
+
+
     const inputNameText = () => {
 
       inputTexts.forEach(elem => {
@@ -371,9 +371,11 @@ window.addEventListener('DOMContentLoaded', () => {
       calcSquary = document.querySelector('.calc-square'),
       calcDay = document.querySelector('.calc-day'),
       calcCount = document.querySelector('.calc-count'),
+      calcSelectAll = document.querySelectorAll('select.calc-type'),
       totalValue = document.getElementById('total');
 
     const countSum = () => {
+
       let total = 0,
         countValue = 1,
         dayValue = 10;
@@ -394,19 +396,36 @@ window.addEventListener('DOMContentLoaded', () => {
 
       if (!!typeValue && !!squareValue) {
         total = price * typeValue * squareValue * countValue * dayValue;
+
       }
 
-      totalValue.textContent = total;
+      totalValue.textContent = +total.toFixed(0);
+
     };
+
 
     calcBlock.addEventListener('change', event => {
       const target = event.target;
       if (target.matches('.calc-day') || target.matches('.calc-type') ||
         target.matches('.calc-square') || target.matches('.calc-count')) {
         countSum();
+        
       }
+      
     });
-
+    
+    calcSelectAll.forEach((elem) => {
+      elem.addEventListener('change', e => {
+        const target = e.target;
+        if (!target.selectedIndex) {
+          calcSquary.value = '';
+          calcDay.value = '';
+          calcCount.value = '';
+        }
+  
+      });
+    });
+    
   };
   calc(100);
 
