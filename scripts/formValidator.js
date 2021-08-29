@@ -10,7 +10,7 @@ const valid = new Validator({
     ],
     'form1-phone': [
       ['notEmpty'],
-      ['pattern', 'phone'],
+     // ['pattern', 'phone'],
     ],
     'form1-email': [
       ['notEmpty'],
@@ -34,7 +34,7 @@ const valid2 = new Validator({
     ],
     'form2-phone': [
       ['notEmpty'],
-      ['pattern', 'phone'],
+     // ['pattern', 'phone'],
     ],
     'form2-email': [
       ['notEmpty'],
@@ -51,7 +51,7 @@ const valid3 = new Validator({
   method: {
     'form3-phone': [
       ['notEmpty'],
-      ['pattern', 'phone'],
+      //['pattern', 'phone'],
     ],
     'form3-email': [
       ['notEmpty'],
