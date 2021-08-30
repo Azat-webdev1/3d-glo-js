@@ -409,11 +409,11 @@ window.addEventListener('DOMContentLoaded', () => {
       if (target.matches('.calc-day') || target.matches('.calc-type') ||
         target.matches('.calc-square') || target.matches('.calc-count')) {
         countSum();
-        
+
       }
-      
+
     });
-    
+
     calcSelectAll.forEach((elem) => {
       elem.addEventListener('change', e => {
         const target = e.target;
@@ -422,11 +422,66 @@ window.addEventListener('DOMContentLoaded', () => {
           calcDay.value = '';
           calcCount.value = '';
         }
-  
+
       });
     });
-    
+
   };
   calc(100);
+
+  const sendForm = () => {
+    const errorMessage = 'Что-то пошло не так...',
+      loadMessage = 'Загрузка...',
+      successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+
+    const form = document.getElementById('form1');
+    const statusMessage = document.createElement('div');
+
+    statusMessage.style.cssText = 'font-size: 2rem; color: #fff';
+
+    const postData = (body, outputData, errorData) => {
+      const request = new XMLHttpRequest();
+
+      request.addEventListener('readystatechange', () => {
+        if (request.readyState !== 4) {
+          return;
+        }
+
+        if (request.status === 200) {
+          outputData();
+        } else {
+          errorData(request.status);
+        }
+      });
+
+      request.open('POST', './server.php');
+      request.setRequestHeader('Content-Type', 'application/json');
+      request.send(JSON.stringify(body));
+    };
+
+    form.addEventListener('submit', event => {
+      const formData = new FormData(form);
+      const body = {};
+
+      statusMessage.textContent = loadMessage;
+      event.preventDefault();
+      form.appendChild(statusMessage);
+
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+
+      postData(body, () => {
+        statusMessage.textContent = successMessage;
+        clearInput(idForm);
+      }, error => {
+        statusMessage.textContent = errorMessage;
+        console.error(error);
+      });
+    });
+
+  };
+  sendForm();
+
 
 });

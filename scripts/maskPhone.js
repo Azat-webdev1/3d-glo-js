@@ -37,6 +37,6 @@ function maskPhone(selector, masked = '+7 (___) ___-__-__') {
 
 }
 
-maskPhone('#form1-phone', '8 (___) ___-__-__');
-maskPhone('#form2-phone', '8 (___) ___-__-__');
-maskPhone('#form3-phone', '8 (___) ___-__-__');
+maskPhone('#form1-phone', '+7 (___) ___-__-__');
+maskPhone('#form2-phone', '+7 (___) ___-__-__');
+maskPhone('#form3-phone', '+7 (___) ___-__-__');
