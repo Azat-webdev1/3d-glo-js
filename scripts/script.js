@@ -56,30 +56,91 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   countTimer('20 Aug 2021');
 
-  // Меню
+   // Меню
   const toggleMenu = () => {
-    const btnMenu = document.querySelector('.menu'),
-      menu = document.querySelector('menu');
+    const menu = document.querySelector('menu'),
+    btnMenu = document.querySelector('.menu'),
+      main = document.querySelector('main');
+    
+    let count = -100;
+    const animate = () => {
+      if (document.documentElement.clientWidth < 768) {
+        menu.style.transform = `translate(0)`;
+        return;
+      }
+      let requestId = requestAnimationFrame(animate);
+      count += 10;
+      menu.style.transform = `translate(${count}%)`;
+      if (count === 0) {
+        cancelAnimationFrame(requestId);
+      }
+    };
 
     const handlerMenu = (e) => {
+      e.preventDefault();
       const target = e.target;
-
+      
       if (target.closest('.menu')) {
         menu.classList.toggle('active-menu');
       } else if (target !== menu && target.closest('[href^="#"]')) {
-
+        
         menu.classList.toggle('active-menu');
       }
       if (!target.classList.contains('close-btn')) {
         menu.style.display = 'flex';
       }
+    
+      if (target.closest('.menu') === null && target.closest('menu') === null) {
+        menu.style.transform = `translate(-100%)`;
+        return;
+      }
+
+      if (target.tagName === 'A' && target.className !== 'close-btn') {
+        scrolling(target);
+      }
+      
+      if (!menu.style.transform || menu.style.transform === `translate(-100%)`) {
+        count = -100;
+        animate();
+      } else if (target.tagName === 'A' || target.closest('.menu')) {
+        menu.style.transform = `translate(-100%)`;
+      }
+      
+      target.removeEventListener('click', (e) => {
+        handlerMenu(e);
+      });
     };
-
-    btnMenu.addEventListener('click', handlerMenu);
-    menu.addEventListener('click', handlerMenu);
-
+      
+    btnMenu.addEventListener('click', (e) => {
+      handlerMenu(e);
+    });
+    
+    menu.addEventListener('click', (e) => {
+      handlerMenu(e);
+    });
+  
   };
   toggleMenu();
+  
+
+  //скролинг
+  const scrolling = (el) => {
+    if (el.href === undefined) return;
+    let link = el.href.split('#')[1];
+    document.querySelector('#' + link).scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  };
+
+  const scrolHead = () => {
+    const btnScrolling = document.querySelector('a[href="#service-block"]');
+    btnScrolling.addEventListener('click', (e) => {
+      e.preventDefault();
+      scrolling(btnScrolling);
+    });
+  };
+  scrolHead();
 
   //Модальное окно
   const togglePopup = () => {
@@ -398,7 +459,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const isValid = e => {
       const target = e.target;
       if (target.matches('.form-phone')) {
-        target.value = target.value.replace(/[^+\d]/g, '');
+        target.value = target.value.replace(/[^\+\d]/g, '');
       }
       if (target.name === 'user_name') {
         target.value = target.value.replace(/[^а-яё ]/gi, '');
@@ -407,22 +468,33 @@ window.addEventListener('DOMContentLoaded', () => {
         target.value = target.value.replace(/[^а-яё\d \. \, \? ! "" ; :]/gi, '');
       }
       if (target.matches('.form-email')) {
-        target.value = target.value.replace(/[^a-z @ \- ! _ . ~ * '' 0-9]/gi);
+        target.value = target.value.replace(/[^a-z @ \- ! _ . ~ * '' 0-9 ]$/gi, '');
       }
+    };
+
+    const removeStatusMessage = () => {
+      const status = document.querySelector('.status-message'),
+        popup = document.querySelector('.popup');
+
+      if (!status) return;
+        setTimeout(() => {
+          status.remove();
+          popup.style.display = 'none';
+      }, 3000);
     };
 
     const processingForm = (idForm) => {
       const form = document.getElementById(idForm);
       const statusMessage = document.createElement('div');
-
+      statusMessage.classList.add('status-message');
       statusMessage.style.cssText = 'font-size: 2rem; color: #fff';
 
-      form.addEventListener('submit', event => {
+      form.addEventListener('submit', e => {
         const formData = new FormData(form);
         const body = {};
 
         statusMessage.textContent = loadMessage;
-        event.preventDefault();
+        e.preventDefault();
         form.appendChild(statusMessage);
 
         formData.forEach((val, key) => {
@@ -430,12 +502,16 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
         postData(body, () => {
+          removeStatusMessage();
           statusMessage.textContent = successMessage;
+          
           clearInput(idForm);
         }, error => {
+          removeStatusMessage();
           statusMessage.textContent = errorMessage;
-          
+          console.log(error);
         });
+      
       });
       form.addEventListener('input', isValid);
 
