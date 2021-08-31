@@ -426,24 +426,27 @@ window.addEventListener('DOMContentLoaded', () => {
       loadMessage = 'Загрузка...',
       successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
 
-    const postData = (body, outputData, errorData) => {
-      const request = new XMLHttpRequest();
+    const postData = (body) => {
+      return new Promise((resolve, reject) => {
+        const request = new XMLHttpRequest();
 
-      request.addEventListener('readystatechange', () => {
-        if (request.readyState !== 4) {
-          return;
-        }
-
-        if (request.status === 200) {
-          outputData();
-        } else {
-          errorData(request.status);
-        }
+        request.addEventListener('readystatechange', () => {
+          if (request.readyState !== 4) {
+            return;
+          }
+  
+          if (request.status === 200) {
+            resolve();
+          } else {
+            reject(request.status);
+          }
+        });
+  
+        request.open('POST', './server.php');
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.send(JSON.stringify(body));
       });
-
-      request.open('POST', './server.php');
-      request.setRequestHeader('Content-Type', 'application/json');
-      request.send(JSON.stringify(body));
+      
     };
 
     const clearInput = (idForm) => {
@@ -501,16 +504,25 @@ window.addEventListener('DOMContentLoaded', () => {
           body[key] = val;
         });
 
-        postData(body, () => {
+        const outputData = () => {
+          statusMessage.style.cssText = `font-size: 2rem;
+            color: green; `;
           removeStatusMessage();
           statusMessage.textContent = successMessage;
-          
           clearInput(idForm);
-        }, error => {
+        };
+
+        const errorMes = () => {
+          statusMessage.style.cssText = `font-size: 2rem;
+            color: red; `;
           removeStatusMessage();
           statusMessage.textContent = errorMessage;
-          console.log(error);
-        });
+          console.error(errorMes);
+        };
+        
+        postData(body)
+          .then(outputData)
+          .catch(errorMes);
       
       });
       form.addEventListener('input', isValid);
