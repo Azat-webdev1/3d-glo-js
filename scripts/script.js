@@ -299,7 +299,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const inputCalc = () => {
       const calc = document.querySelector('#calc');
       calc.addEventListener('input', (e) => {
-        e.target.value = e.target.value.replace(/[^0-9 \.]/g, '');
+        e.target.value = e.target.value.replace(/[^\d\.]/g, '');
 
       });
     };
@@ -404,10 +404,10 @@ window.addEventListener('DOMContentLoaded', () => {
         target.value = target.value.replace(/[^а-яё ]/gi, '');
       }
       if (target.matches('.mess')) {
-        target.value = target.value.replace(/[^\W а-яё\d]/gi, '');
+        target.value = target.value.replace(/[^а-яё\d \. \, \? ! "" ; :]/gi, '');
       }
       if (target.matches('.form-email')) {
-        target.value = target.value.replace(/[^a-z @ \- ! _ . ~ * '']/gi, '');
+        target.value = target.value.replace(/[^a-z @ \- ! _ . ~ * '' 0-9]/gi);
       }
     };
 
@@ -434,7 +434,7 @@ window.addEventListener('DOMContentLoaded', () => {
           clearInput(idForm);
         }, error => {
           statusMessage.textContent = errorMessage;
-          console.error(error);
+          
         });
       });
       form.addEventListener('input', isValid);
