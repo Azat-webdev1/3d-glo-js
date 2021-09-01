@@ -109,6 +109,7 @@ window.addEventListener('DOMContentLoaded', () => {
       target.removeEventListener('click', (e) => {
         handlerMenu(e);
       });
+      
     };
       
     btnMenu.addEventListener('click', (e) => {
@@ -117,6 +118,14 @@ window.addEventListener('DOMContentLoaded', () => {
     
     menu.addEventListener('click', (e) => {
       handlerMenu(e);
+    });
+    
+    main.addEventListener('click', (e) => {
+      const target = e.target;
+      if (!target.closest('.form-btn')) {
+        handlerMenu(e);
+      }
+    
     });
   
   };
@@ -421,6 +430,7 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   calc(100);
 
+  //Отправка формы
   const sendForm = () => {
     const errorMessage = 'Что-то пошло не так...',
       loadMessage = 'Загрузка...',
@@ -458,30 +468,14 @@ window.addEventListener('DOMContentLoaded', () => {
         .forEach(item =>
           item.value = '');
     };
-
-    const isValid = e => {
-      const target = e.target;
-      if (target.matches('.form-phone')) {
-        target.value = target.value.replace(/[^\+\d]/g, '');
-      }
-      if (target.name === 'user_name') {
-        target.value = target.value.replace(/[^а-яё ]/gi, '');
-      }
-      if (target.matches('.mess')) {
-        target.value = target.value.replace(/[^а-яё\d \. \, \? ! "" ; :]/gi, '');
-      }
-      if (target.matches('.form-email')) {
-        target.value = target.value.replace(/[^a-z @ \- ! _ . ~ * '' 0-9 ]$/gi, '');
-      }
-    };
-
+    
     const removeStatusMessage = () => {
       const status = document.querySelector('.status-message'),
         popup = document.querySelector('.popup');
-
-      if (!status) return;
+        if (!status) return;
         setTimeout(() => {
           status.remove();
+          
           popup.style.display = 'none';
       }, 3000);
     };
@@ -489,21 +483,53 @@ window.addEventListener('DOMContentLoaded', () => {
     const processingForm = (idForm) => {
       const form = document.getElementById(idForm);
       const statusMessage = document.createElement('div');
+      const emails = document.querySelectorAll('.form-email');
+      const inputs = document.querySelectorAll('input');
+      const btns = document.querySelectorAll('.form-btn');
+      
       statusMessage.classList.add('status-message');
       statusMessage.style.cssText = 'font-size: 2rem; color: #fff';
+      
+      emails.forEach((el) => {
+        el.setAttribute('required', '');
+      });
+      
+      const btnSetAttribute = () => {
+        btns.forEach((el) => {
+          el.setAttribute('disabled', true);
+        });
+      };
+      
+      const btnRemoveAttribute = () => {
+        btns.forEach((el) => {
+          el.removeAttribute('disabled');
+        });
+      };
+      
+      inputs.forEach((el) => {
+        el.addEventListener('input', (e) => {
+          const target = e.target;
+          if (target.closest('.error')) {
+            btnSetAttribute();
+          } else {
+            btnRemoveAttribute();
+          }
+        });
+      });
 
       form.addEventListener('submit', e => {
+        
         const formData = new FormData(form);
         const body = {};
-
-        statusMessage.textContent = loadMessage;
         e.preventDefault();
+        statusMessage.textContent = loadMessage;
+        
         form.appendChild(statusMessage);
 
         formData.forEach((val, key) => {
           body[key] = val;
         });
-
+        
         const outputData = () => {
           statusMessage.style.cssText = `font-size: 2rem;
             color: green; `;
@@ -517,7 +543,8 @@ window.addEventListener('DOMContentLoaded', () => {
             color: red; `;
           removeStatusMessage();
           statusMessage.textContent = errorMessage;
-          console.error(errorMes);
+          //console.error(errorMes);
+          
         };
         
         postData(body)
@@ -525,8 +552,8 @@ window.addEventListener('DOMContentLoaded', () => {
           .catch(errorMes);
       
       });
-      form.addEventListener('input', isValid);
-
+      //form.addEventListener('input', );
+    
     };
     processingForm('form1');
     processingForm('form2');
