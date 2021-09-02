@@ -109,7 +109,7 @@ class Validator {
 
   setPattern() {
     if (!this.pattern.name) {
-      this.pattern.name = /^[а-яё ]+$/i;
+      this.pattern.name = /^[а-яё]{2,}$/i;
     }
     if (!this.pattern.message) {
       this.pattern.message = /^[а-яё\d\.\,\? ! "" ; :]+$/gi;
