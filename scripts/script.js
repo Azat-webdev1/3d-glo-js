@@ -56,12 +56,12 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   countTimer('20 Aug 2021');
 
-   // Меню
+  // Меню
   const toggleMenu = () => {
     const menu = document.querySelector('menu'),
-    btnMenu = document.querySelector('.menu'),
+      btnMenu = document.querySelector('.menu'),
       main = document.querySelector('main');
-    
+
     let count = -100;
     const animate = () => {
       if (document.documentElement.clientWidth < 768) {
@@ -79,17 +79,17 @@ window.addEventListener('DOMContentLoaded', () => {
     const handlerMenu = (e) => {
       e.preventDefault();
       const target = e.target;
-      
+
       if (target.closest('.menu')) {
         menu.classList.toggle('active-menu');
       } else if (target !== menu && target.closest('[href^="#"]')) {
-        
+
         menu.classList.toggle('active-menu');
       }
       if (!target.classList.contains('close-btn')) {
         menu.style.display = 'flex';
       }
-    
+
       if (target.closest('.menu') === null && target.closest('menu') === null) {
         menu.style.transform = `translate(-100%)`;
         return;
@@ -98,39 +98,39 @@ window.addEventListener('DOMContentLoaded', () => {
       if (target.tagName === 'A' && target.className !== 'close-btn') {
         scrolling(target);
       }
-      
+
       if (!menu.style.transform || menu.style.transform === `translate(-100%)`) {
         count = -100;
         animate();
       } else if (target.tagName === 'A' || target.closest('.menu')) {
         menu.style.transform = `translate(-100%)`;
       }
-      
+
       target.removeEventListener('click', (e) => {
         handlerMenu(e);
       });
-      
+
     };
-      
+
     btnMenu.addEventListener('click', (e) => {
       handlerMenu(e);
     });
-    
+
     menu.addEventListener('click', (e) => {
       handlerMenu(e);
     });
-    
+
     main.addEventListener('click', (e) => {
       const target = e.target;
       if (!target.closest('.form-btn')) {
         handlerMenu(e);
       }
-    
+
     });
-  
+
   };
   toggleMenu();
-  
+
 
   //скролинг
   const scrolling = (el) => {
@@ -356,7 +356,7 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   toggleImageCommand();
 
-   //Калькулятор
+  //Калькулятор
   const calc = (price = 100) => {
     const calcBlock = document.querySelector('.calc-block'),
       calcType = document.querySelector('.calc-type'),
@@ -436,28 +436,14 @@ window.addEventListener('DOMContentLoaded', () => {
       loadMessage = 'Загрузка...',
       successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
 
-    const postData = (body) => {
-      return new Promise((resolve, reject) => {
-        const request = new XMLHttpRequest();
-
-        request.addEventListener('readystatechange', () => {
-          if (request.readyState !== 4) {
-            return;
-          }
-  
-          if (request.status === 200) {
-            resolve();
-          } else {
-            reject(request.status);
-          }
-        });
-  
-        request.open('POST', './server.php');
-        request.setRequestHeader('Content-Type', 'application/json');
-        request.send(JSON.stringify(body));
-      });
-      
-    };
+    const postData = body => fetch('./server.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body),
+      credentials: 'include'
+    });
 
     const clearInput = (idForm) => {
       const form = document.getElementById(idForm);
@@ -468,15 +454,15 @@ window.addEventListener('DOMContentLoaded', () => {
         .forEach(item =>
           item.value = '');
     };
-    
+
     const removeStatusMessage = () => {
       const status = document.querySelector('.status-message'),
         popup = document.querySelector('.popup');
-        if (!status) return;
-        setTimeout(() => {
-          status.remove();
-          
-          popup.style.display = 'none';
+      if (!status) return;
+      setTimeout(() => {
+        status.remove();
+
+        popup.style.display = 'none';
       }, 3000);
     };
 
@@ -486,26 +472,26 @@ window.addEventListener('DOMContentLoaded', () => {
       const emails = document.querySelectorAll('.form-email');
       const inputs = document.querySelectorAll('input');
       const btns = document.querySelectorAll('.form-btn');
-      
+
       statusMessage.classList.add('status-message');
       statusMessage.style.cssText = 'font-size: 2rem; color: #fff';
-      
+
       emails.forEach((el) => {
         el.setAttribute('required', '');
       });
-      
+
       const btnSetAttribute = () => {
         btns.forEach((el) => {
           el.setAttribute('disabled', true);
         });
       };
-      
+
       const btnRemoveAttribute = () => {
         btns.forEach((el) => {
           el.removeAttribute('disabled');
         });
       };
-      
+
       inputs.forEach((el) => {
         el.addEventListener('input', (e) => {
           const target = e.target;
@@ -518,42 +504,31 @@ window.addEventListener('DOMContentLoaded', () => {
       });
 
       form.addEventListener('submit', e => {
-        
-        const formData = new FormData(form);
-        const body = {};
         e.preventDefault();
         statusMessage.textContent = loadMessage;
-        
         form.appendChild(statusMessage);
-
-        formData.forEach((val, key) => {
-          body[key] = val;
-        });
         
-        const outputData = () => {
-          statusMessage.style.cssText = `font-size: 2rem;
-            color: green; `;
-          removeStatusMessage();
-          statusMessage.textContent = successMessage;
-          clearInput(idForm);
-        };
+        postData(Object.fromEntries(new FormData(form)))
+          .then((response) => {
+            if (response.status !== 200) {
+              throw new Error('status network not 200');
+            }
+            statusMessage.style.cssText = `font-size: 2rem;
+              color: green; `;
+            removeStatusMessage();
+            statusMessage.textContent = successMessage;
+            clearInput(idForm);
+          })
+          .catch((error) => {
+            statusMessage.style.cssText = `font-size: 2rem;
+              color: red; `;
+            removeStatusMessage();
+            statusMessage.textContent = errorMessage;
+            console.error(error);
+          });
 
-        const errorMes = () => {
-          statusMessage.style.cssText = `font-size: 2rem;
-            color: red; `;
-          removeStatusMessage();
-          statusMessage.textContent = errorMessage;
-          //console.error(errorMes);
-          
-        };
-        
-        postData(body)
-          .then(outputData)
-          .catch(errorMes);
-      
       });
-      //form.addEventListener('input', );
-    
+      
     };
     processingForm('form1');
     processingForm('form2');
