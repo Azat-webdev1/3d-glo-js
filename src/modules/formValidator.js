@@ -1,5 +1,7 @@
 'use strict';
 
+import Validator from '../plugins/validator/validator';
+
 const valid = new Validator({
   selector: '#form1',
   pattern: {
@@ -20,7 +22,7 @@ const valid = new Validator({
     ]
   },
 });
-valid.init();
+
 
 const valid2 = new Validator({
   selector: '#form2',
@@ -47,7 +49,7 @@ const valid2 = new Validator({
   },
 });
 
-valid2.init();
+
 
 const valid3 = new Validator({
   selector: '#form3',
@@ -70,4 +72,6 @@ const valid3 = new Validator({
   },
 });
 
-valid3.init();
+
+
+export { valid, valid2, valid3 };

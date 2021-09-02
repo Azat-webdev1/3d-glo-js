@@ -1,0 +1,24 @@
+{
+  "name": "3d-glo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Azat-webdev1/3d-glo-js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Azat-webdev1/3d-glo-js/issues"
+  },
+  "homepage": "https://github.com/Azat-webdev1/3d-glo-js#readme",
+  "devDependencies": {
+    "webpack": "^5.51.2",
+    "webpack-cli": "^4.8.0"
+  }
+}
