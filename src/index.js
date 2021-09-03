@@ -24,8 +24,6 @@ maskPhone('#form3-phone', '+7__________');
 countTimer('13 Sep 2021');
 // Меню
 toggleMenu();
-//Модальное окно
-togglePopup();
 //Табы
 tabs();
 //Слайдер
@@ -36,3 +34,5 @@ toggleImageCommand();
 calc(100);
 //Отправка формы
 sendForm();
+//Модальное окно
+togglePopup();

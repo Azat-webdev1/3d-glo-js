@@ -38,8 +38,8 @@ const sendForm = () => {
     const statusMessage = document.createElement('div');
     const emails = document.querySelectorAll('.form-email');
     const inputs = document.querySelectorAll('input');
-    const btns = document.querySelectorAll('.form-btn');
-
+    const formBtns = document.querySelectorAll('.form-btn');
+    
     statusMessage.classList.add('status-message');
     statusMessage.style.cssText = 'font-size: 2rem; color: #fff';
 
@@ -48,14 +48,15 @@ const sendForm = () => {
     });
 
     const btnSetAttribute = () => {
-      btns.forEach((el) => {
+      formBtns.forEach((el) => {
         el.setAttribute('disabled', true);
       });
     };
 
     const btnRemoveAttribute = () => {
-      btns.forEach((el) => {
+      formBtns.forEach((el) => {
         el.removeAttribute('disabled');
+        
       });
     };
 
@@ -68,38 +69,47 @@ const sendForm = () => {
           btnRemoveAttribute();
         }
       });
-    });
-
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      statusMessage.textContent = loadMessage;
-      form.appendChild(statusMessage);
       
-      postData(Object.fromEntries(new FormData(form)))
-        .then((response) => {
-          if (response.status !== 200) {
-            throw new Error('status network not 200');
-          }
-          statusMessage.style.cssText = `font-size: 2rem;
-            color: green; `;
-          removeStatusMessage();
-          statusMessage.textContent = successMessage;
-          clearInput(idForm);
-        })
-        .catch((error) => {
-          statusMessage.style.cssText = `font-size: 2rem;
-            color: red; `;
-          removeStatusMessage();
-          statusMessage.textContent = errorMessage;
-          console.error(error);
-        });
-
+      el.addEventListener('blur', e => {
+        if (e.target.closest('input[placeholder="Ваше имя"]')) {
+          let text = e.target.value;
+          text = text[0].toUpperCase() + text.substring(1);
+          e.target.value = text;
+        }
+      }, true);
+    
     });
     
-  };
-  processingForm('form1');
-  processingForm('form2');
-  processingForm('form3');
+    form.addEventListener('submit', e => {
+    e.preventDefault();
+    statusMessage.textContent = loadMessage;
+    form.appendChild(statusMessage);
+
+    postData(Object.fromEntries(new FormData(form)))
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error('status network not 200');
+        }
+        statusMessage.style.cssText = `font-size: 2rem;
+            color: green; `;
+        removeStatusMessage();
+        statusMessage.textContent = successMessage;
+        clearInput(idForm);
+      })
+      .catch((error) => {
+        statusMessage.style.cssText = `font-size: 2rem;
+            color: red; `;
+        removeStatusMessage();
+        statusMessage.textContent = errorMessage;
+        console.error(error);
+      });
+
+  });
+
+};
+processingForm('form1');
+processingForm('form2');
+processingForm('form3');
 
 };
 
